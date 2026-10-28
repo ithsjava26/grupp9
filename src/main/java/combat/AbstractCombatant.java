@@ -4,14 +4,14 @@ public abstract class AbstractCombatant implements Combatant {
     private final String name;
     private int hp;
     private final int damage;
-    private final int armor;
+    private final int armour;
     private final int speed;
 
-    protected AbstractCombatant(String name, int hp, int damage, int armor, int speed) {
+    protected AbstractCombatant(String name, int hp, int damage, int armour, int speed) {
         this.name = name;
         this.hp = hp;
         this.damage = damage;
-        this.armor = armor;
+        this.armour = armour;
         this.speed = speed;
     }
 
@@ -31,8 +31,8 @@ public abstract class AbstractCombatant implements Combatant {
     }
 
     @Override
-    public int getArmor() {
-        return armor;
+    public int getArmour() {
+        return armour;
     }
 
     @Override
@@ -47,7 +47,7 @@ public abstract class AbstractCombatant implements Combatant {
 
     @Override
     public void takeDamage(int amount) {
-        int dealt = Math.max(0, amount - armor);
+        int dealt = Math.max(0, amount - armour);
         hp = Math.max(0, hp - dealt);
     }
 }
