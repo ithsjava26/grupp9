@@ -7,7 +7,7 @@ public interface Combatant {
 
     int getDamage();
 
-    int getArmor();
+    int getArmour();
 
     int getSpeed();
 
