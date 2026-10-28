@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AbstractCombatantTest {
 
-    // Incoming damage is reduced by armor
+    // Incoming damage is reduced by armour
     @Test
-    void damageTakenShouldBeReducedByArmor() {
+    void damageTakenShouldBeReducedByArmour() {
         Enemy enemy = new Enemy("Troll", 20, 5, 3, 1);
 
         enemy.takeDamage(10);
@@ -16,7 +16,7 @@ class AbstractCombatantTest {
         assertEquals(13, enemy.getHp());
     }
 
-    // Armor larger than damage must never heal the target
+    // Armour larger than damage must never heal the target
     @Test
     void negativeDamageShouldNotHealCombatant() {
         Enemy enemy = new Enemy("Knight", 20, 5, 10, 1);
