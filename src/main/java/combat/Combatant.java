@@ -15,4 +15,9 @@ public interface Combatant {
 
     void takeDamage(int amount);
 
+    // Deals damage to the target using the chosen attack strategy
+    default void attack(Combatant target, AttackStrategy strategy) {
+        target.takeDamage(strategy.calculateDamage(this));
+    }
+
 }
