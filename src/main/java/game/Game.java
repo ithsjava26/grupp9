@@ -6,6 +6,7 @@ public class Game {
 
     private static final int TOTAL_STAGES = 5;
     private int currentStage = 1;
+    private boolean gameCompleted = false;
 
     public Game() {
         hero = new Hero("Player", 100, 15, 5, 10);
@@ -30,6 +31,7 @@ public class Game {
             currentStage++;
             System.out.println("Stage: " + currentStage + " / " + TOTAL_STAGES);
         } else {
+            gameCompleted = true;
             System.out.println("All regular stages completed!");
         }
     }
@@ -39,6 +41,6 @@ public class Game {
     }
 
     public boolean isGameComplete() {
-        return currentStage >= TOTAL_STAGES;
+        return gameCompleted;
     }
 }

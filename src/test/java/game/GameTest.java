@@ -35,6 +35,7 @@ public class GameTest {
         for (int i = 1; i < 5; i++) {
             game.nextStage();
         }
+        game.nextStage();
         assertTrue(game.isGameComplete());
     }
 
@@ -47,6 +48,16 @@ public class GameTest {
         }
         game.nextStage();
         assertEquals(5, game.getCurrentStage());
+    }
+
+    @Test
+    void gameIsNotCompleteWhenReachFinalStage() {
+        Game game = new Game();
+        for (int i = 1; i < 5; i++) {
+            game.nextStage();
+        }
+        assertEquals(5, game.getCurrentStage());
+        assertFalse(game.isGameComplete());
     }
 
 
