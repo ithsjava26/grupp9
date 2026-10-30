@@ -55,4 +55,50 @@ class AbstractCombatantTest {
 
         assertFalse(hero.isAlive());
     }
+
+    // Healing restores hp
+    @Test
+    void healRestoresHp() {
+        Hero hero = new Hero("Hero", 20, 5, 0, 3);
+        hero.takeDamage(10);
+
+        hero.heal(4);
+
+        assertEquals(14, hero.getHp());
+    }
+
+    // Healing never goes above the starting hp
+    @Test
+    void healCannotExceedMaxHp() {
+        Hero hero = new Hero("Hero", 20, 5, 0, 3);
+        hero.takeDamage(3);
+
+        hero.heal(100);
+
+        assertEquals(20, hero.getHp());
+    }
+
+    // A dead combatant cannot be healed back to life
+    @Test
+    void deadCombatantCannotBeHealed() {
+        Hero hero = new Hero("Hero", 20, 5, 0, 3);
+        hero.takeDamage(20);
+
+        hero.heal(10);
+
+        assertFalse(hero.isAlive());
+    }
+
+    // A negative heal must not reduce hp
+    @Test
+    void negativeHealDoesNothing() {
+        Hero hero = new Hero("Hero", 20, 5, 0, 3);
+        hero.takeDamage(5);
+
+        hero.heal(-3);
+
+        assertEquals(15, hero.getHp());
+    }
+
+
 }
