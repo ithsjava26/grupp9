@@ -6,6 +6,7 @@ public abstract class AbstractCombatant implements Combatant {
     private final int damage;
     private final int armour;
     private final int speed;
+    private final int maxHp;
 
     protected AbstractCombatant(String name, int hp, int damage, int armour, int speed) {
         this.name = name;
@@ -13,6 +14,7 @@ public abstract class AbstractCombatant implements Combatant {
         this.damage = damage;
         this.armour = armour;
         this.speed = speed;
+        this.maxHp = hp;
     }
 
     @Override
@@ -49,5 +51,12 @@ public abstract class AbstractCombatant implements Combatant {
     public void takeDamage(int amount) {
         int dealt = Math.max(0, amount - getArmour());
         hp = Math.max(0, hp - dealt);
+    }
+
+    @Override
+    public void heal(int amount) {
+        if (!isAlive())
+            return;
+        hp = Math.min(maxHp, hp + amount);
     }
 }
