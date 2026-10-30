@@ -89,7 +89,16 @@ class AbstractCombatantTest {
         assertFalse(hero.isAlive());
     }
 
+    // A negative heal must not reduce hp
+    @Test
+    void negativeHealDoesNothing() {
+        Hero hero = new Hero("Hero", 20, 5, 0, 3);
+        hero.takeDamage(5);
 
+        hero.heal(-3);
+
+        assertEquals(15, hero.getHp());
+    }
 
 
 }

@@ -55,8 +55,9 @@ public abstract class AbstractCombatant implements Combatant {
 
     @Override
     public void heal(int amount) {
-        if (!isAlive())
+        if (!isAlive() || amount <= 0) {
             return;
+        }
         hp = Math.min(maxHp, hp + amount);
     }
 }
