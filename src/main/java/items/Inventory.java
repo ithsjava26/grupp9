@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private final List<Item> items;
+    protected final List<Item> items;
     private final int weightCapacity;
 
     public Inventory(int weightCapacity) {
@@ -14,7 +14,7 @@ public class Inventory {
 
     public boolean add(Item item) {
         if (currentWeight() + item.weight() > weightCapacity) {
-            IO.println("Cannot carry " + item.name() + " , you are overburdened.");
+            IO.println("Cannot carry " + item.name() + ", you are overburdened.");
             return false;
         }
         items.add(item);
@@ -30,21 +30,22 @@ public class Inventory {
         return items.stream().mapToInt(Item::weight).sum();
     }
 
-    public void display() {
+    public short display() {
         if (items.isEmpty()) {
             IO.println("Inventory is empty.");
-            return;
+            return 0;
         }
 
         IO.println("Inventory (" + currentWeight() + "/" + weightCapacity + ")");
         for (Item item : items) {
             String stats = switch (item) {
-                case Weapon w -> "DMG: " + w.damage();
-                case Armour a -> "DEF: " + a.defence();
-                case Potion p -> "HEAL: " + p.healthRestored();
+                case Weapon w -> " DMG: " + w.damage();
+                case Armour a -> " DEF: " + a.defence();
+                case Potion p -> " HEAL: " + p.healthRestored();
             };
             IO.println(item.name() + item.description() + stats);
 
         }
+        return 0;
     }
 }
