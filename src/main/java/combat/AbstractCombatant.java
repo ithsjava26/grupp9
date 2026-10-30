@@ -47,7 +47,7 @@ public abstract class AbstractCombatant implements Combatant {
 
     @Override
     public void takeDamage(int amount) {
-        int dealt = Math.max(0, amount - armour);
+        int dealt = Math.max(0, amount - getArmour());
         hp = Math.max(0, hp - dealt);
     }
 }
