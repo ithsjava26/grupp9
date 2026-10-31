@@ -15,6 +15,9 @@ public class GameMenu {
         if (scanner.hasNextInt()) {
             return scanner.nextInt();
         }
+        if (!scanner.hasNextLine()) {
+            return -1;
+        }
 
         scanner.nextLine();
         System.out.println("Invalid input. Please enter a number.");
@@ -22,12 +25,12 @@ public class GameMenu {
     }
 
     public void handleChoice(int choice) {
-        if (choice == -1) {
-            return;
-        }
+
         switch (choice) {
             case 1:
                 System.out.println("Starting a new game...");
+                Game game = new Game();
+                game.start();
                 break;
             case 2:
                 System.out.println("Load game is not available yet.");
