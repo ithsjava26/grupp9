@@ -4,48 +4,88 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    protected final List<Item> items;
-    private final int weightCapacity;
+    private Weapon equippedWeapon;
+    private Armour equippedArmour;
+    private final List<Potion> potions;
+    private final int maxPotions;
 
-    public Inventory(int weightCapacity) {
-        this.items = new ArrayList<>();
-        this.weightCapacity = weightCapacity;
+    public Inventory(int maxPotions, Weapon startingWeapon, Armour startingArmour) {
+        this.potions = new ArrayList<>();
+        this.maxPotions = maxPotions;
+        this.equippedWeapon = startingWeapon;
+        this.equippedArmour = startingArmour;
     }
 
-    public boolean add(Item item) {
-        if (currentWeight() + item.weight() > weightCapacity) {
-            IO.println("Cannot carry " + item.name() + ", you are overburdened.");
+    public Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    public Armour getEquippedArmour() {
+        return equippedArmour;
+    }
+
+    public List<Potion> getPotions() {
+        return potions;
+    }
+
+    public void handleWeaponDrop(Weapon newWeapon) {
+        IO.println("\n--- LOOT FOUND ---");
+        IO.println("New Weapon: " + newWeapon.name() + " (+" + newWeapon.damage() + " DMG) - " + newWeapon.description());
+        IO.println("Currently Equipped: " + equippedWeapon.name() + " (+" + equippedWeapon.damage() + " DMG)");
+        IO.println("[1] Keep current (" + equippedWeapon.name() + ")");
+        IO.println("[2] Take new and discard current (" + newWeapon.name() + ")");
+        IO.println("Choose an option (1-2): ");
+
+        int choice = Integer.parseInt(IO.readln());
+        if (choice == 2) {
+            IO.println("You discarded " + equippedWeapon.name() + " and equipped " + newWeapon.name() + ".");
+            equippedWeapon = newWeapon;
+        } else {
+            IO.println("You left " + newWeapon.name() + " behind.");
+        }
+    }
+
+    public void handleArmourDrop(Armour newArmour) {
+        IO.println("\n--- LOOT FOUND ---");
+        IO.println("New Armour: " + newArmour.name() + " (+" + newArmour.defence() + " DEF) - " + newArmour.description());
+        IO.println("Currently Equipped: " + equippedArmour.name() + " (+" + equippedArmour.defence() + " DEF)");
+        IO.println("[1] Keep current (" + equippedArmour.name() + ")");
+        IO.println("[2] Take new and discard current (" + newArmour.name() + ")");
+        IO.println("Choose an option (1-2): ");
+
+        int choice = Integer.parseInt(IO.readln());
+        if (choice == 2) {
+            IO.println("You discarded " + equippedArmour.name() + " and equipped " + newArmour.name() + ".");
+            equippedArmour = newArmour;
+        } else {
+            IO.println("You left " + newArmour.name() + " behind.");
+        }
+    }
+
+    public boolean addPotion(Potion potion) {
+        if (potions.size() >= maxPotions) {
+            IO.println("Your potion pouch is full! Cannot carry " + potion.name() + ".");
             return false;
         }
-        items.add(item);
-        IO.println(item.name() + " added to inventory.");
+        potions.add(potion);
+        IO.println("Added to potion pouch: " + potion.name());
         return true;
     }
 
-    public boolean remove(Item item) {
-        return items.remove(item);
-    }
+    public void display() {
+        IO.println("\n=== HERO STATUS ===");
+        IO.println("Weapon: %s (+%d DMG)%n " + equippedWeapon.name() + equippedWeapon.damage());
+        IO.println("Armour: %s (+%d DEF)%n " + equippedArmour.name() + equippedArmour.defence());
+        IO.println("Potions (" + potions.size() + "/" + maxPotions + "):");
 
-    public int currentWeight() {
-        return items.stream().mapToInt(Item::weight).sum();
-    }
-
-    public short display() {
-        if (items.isEmpty()) {
-            IO.println("Inventory is empty.");
-            return 0;
+        if (potions.isEmpty()) {
+            IO.println("  - None");
+        } else {
+            for (int i = 0; i < potions.size(); i++) {
+                Potion p = potions.get(i);
+                IO.println("  [%d] %s (+%d HP)%n", i + 1, p.name(), p.healthRestored());
+            }
         }
-
-        IO.println("Inventory (" + currentWeight() + "/" + weightCapacity + ")");
-        for (Item item : items) {
-            String stats = switch (item) {
-                case Weapon w -> " DMG: " + w.damage();
-                case Armour a -> " DEF: " + a.defence();
-                case Potion p -> " HEAL: " + p.healthRestored();
-            };
-            IO.println(item.name() + item.description() + stats);
-
-        }
-        return 0;
     }
+
 }
