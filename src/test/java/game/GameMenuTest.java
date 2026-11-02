@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.InputStream;
 import java.util.regex.Pattern;
+import java.util.Scanner;
 
 
 class GameMenuTest {
@@ -56,7 +57,7 @@ class GameMenuTest {
         PrintStream originalOut = System.out;
         try {
             System.setOut(new PrintStream(output));
-            menu.handleChoice(2);
+            menu.handleChoice(2, new Scanner(""));
             assertTrue(output.toString().contains("Load game is not available yet."));
         } finally {
             System.setOut(originalOut);
@@ -70,7 +71,7 @@ class GameMenuTest {
         PrintStream originalOut = System.out;
         try {
             System.setOut(new PrintStream(output));
-            menu.handleChoice(3);
+            menu.handleChoice(3, new Scanner(""));
             assertTrue(output.toString().contains("Exiting game. Goodbye!"));
         } finally {
             System.setOut(originalOut);
@@ -84,7 +85,7 @@ class GameMenuTest {
         PrintStream originalOut = System.out;
         try {
             System.setOut(new PrintStream(output));
-            menu.handleChoice(9);
+            menu.handleChoice(9, new Scanner(""));
             assertTrue(output.toString().contains("Invalid choice! Please choose 1, 2 or 3."));
         } finally {
             System.setOut(originalOut);
@@ -119,6 +120,26 @@ class GameMenuTest {
             );
             assertTrue(result.contains("Load game is not available yet."));
             assertTrue(result.contains("Exiting game. Goodbye!"));
+        } finally {
+            System.setIn(originalIn);
+            System.setOut(originalOut);
+        }
+    }
+
+    @Test
+    void runMenuStopsWhenInputEnds() {
+        InputStream originalIn = System.in;
+        PrintStream originalOut = System.out;
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            System.setIn(new ByteArrayInputStream(new byte[0]));
+            System.setOut(new PrintStream(output));
+
+            GameMenu menu  = new GameMenu();
+            menu.runMenu();
+
+            assertTrue(output.toString().contains("Input ended. Exiting game."));
         } finally {
             System.setIn(originalIn);
             System.setOut(originalOut);
