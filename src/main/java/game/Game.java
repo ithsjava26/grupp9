@@ -34,7 +34,7 @@ public class Game {
             boolean heroWon = battleController.startBattle(hero, enemy);
 
             if (heroWon) {
-                System.out.println("You won the batle!");
+                System.out.println("You won the battle!");
                 nextStage();
             } else {
                 System.out.println("Game Over! Your hero was defeated.");

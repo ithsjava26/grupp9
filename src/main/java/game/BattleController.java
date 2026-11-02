@@ -20,7 +20,7 @@ public class BattleController {
         Battle battle = new Battle(hero, enemy);
 
         while (!battle.isOver()) {
-            System.out.println("\nChooce your attack:");
+            System.out.println("\nChoose your attack:");
             System.out.println("1. Light Attack");
             System.out.println("2. Normal Attack");
             System.out.println("3. Heavy Attack");
