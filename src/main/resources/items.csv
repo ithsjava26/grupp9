@@ -1,0 +1,18 @@
+TYPE,NAME,DESCRIPTION,WEIGHT,VALUE
+WEAPON,Peg Leg,An old wooden prosthetic leg.. it kind of smells.,1,1
+WEAPON,Wooden Sword,An old training sword. Not very effective in combat.,1,2
+WEAPON,Rusty Dagger,Chipped blade suitable for stabbing rats.,1,3
+WEAPON,Iron Longsword,Standard issue guard's weapon.,4,8
+WEAPON,Steel Warhammer,Heavy slow and devastating.,10,15
+WEAPON,Obsidian Blade,Magically honed edge.,3,18
+WEAPON,Iron Pan,What about second breakfast?,3,4
+WEAPON,Shard of Narsil,The broken hilt of the sword that cut the one ring from the hand of the dark lord Sauron.,2,10
+WEAPON,Anduril,Flame of the west. Reforged by the Elven smiths of Rivendell.,4,20
+ARMOUR,Leather Speedo,Bro.. put some clothes on.,1,1
+ARMOUR,Iron Armour,Heavy but does the job.,4,2
+ARMOUR,Tattered Robe,Offers virtually no physical protection.,1,1
+ARMOUR,Leather Cuirass,Boiled leather that absorbs light blows.,6,4
+ARMOUR,Mithril Mail,Forged by the Dwarves of Erebor nigh indestructible.,2,8
+POTION,Minor Health Potion,Restores 2 health points.,1,2
+POTION,Greater Health Potion,Restores 4 health points.,1,4
+POTION,Super Health Potion,Restores 6 health points.,1,6
