@@ -1,13 +1,17 @@
 package game;
+
+import items.Inventory;
 import combat.Hero;
 import combat.Enemy;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Game {
+
     private Hero hero;
     private final Scanner scanner;
-
+    private static final int INVENTORY_CAPACITY = 100;
+    private final Inventory inventory = new Inventory(INVENTORY_CAPACITY);
 
     private static final int TOTAL_STAGES = 5;
     private int currentStage = 1;
@@ -31,7 +35,7 @@ public class Game {
         while (!gameCompleted && hero.isAlive()) {
 
             Enemy enemy = new Enemy("Prison Guard", 50, 10, 3, 5);
-            BattleController battleController = new BattleController(scanner);
+            BattleController battleController = new BattleController(scanner, inventory);
             boolean heroWon;
             try {
                 heroWon = battleController.startBattle(hero, enemy);

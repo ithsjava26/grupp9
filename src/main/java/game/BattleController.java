@@ -1,4 +1,9 @@
 package game;
+
+import items.Inventory;
+import items.Item;
+import items.LootGenerator;
+import java.util.Random;
 import combat.Battle;
 import combat.Hero;
 import combat.Enemy;
@@ -12,10 +17,17 @@ import java.util.Scanner;
 
 public class BattleController {
     private final Scanner scanner;
-    public BattleController(Scanner scanner) {
-        this.scanner = scanner;
-    }
+    private final Inventory inventory;
+    private final LootGenerator lootGenerator =
+            new LootGenerator(new Random());
 
+    public BattleController(Scanner scanner) {
+        this(scanner, null);
+    }
+    public BattleController(Scanner scanner, Inventory inventory) {
+        this.scanner = scanner;
+        this.inventory = inventory;
+    }
     public boolean startBattle(Hero hero, Enemy enemy) {
         Battle battle = new Battle(hero, enemy);
 
@@ -49,6 +61,24 @@ public class BattleController {
                System.out.println(event.attacker() + " attacks " + event.target()
                + " for " + event.damage() + " damage!");
                System.out.println(event.target() + " has " + event.targetHpLeft() + " HP left.");
+            }
+        }
+        if (hero.isAlive() && inventory != null) {
+            Item droppedLoot = lootGenerator.dropAnyItem();
+            System.out.println("The enemy dropped: " + droppedLoot.name());
+            System.out.println("Do you want to pick it up?");
+            System.out.println("1. Yes, take it");
+            System.out.println("2.No, leave it");
+            System.out.print("Your choice: ");
+
+            String lootChoice = scanner.nextLine().trim();
+
+            if (lootChoice.equals("1")) {
+                inventory.add(droppedLoot);
+            } else if (lootChoice.equals("2")) {
+                System.out.println("You left the loot behind.");
+            } else {
+                System.out.println("Invalid choice. Loot left behind.");
             }
         }
         return hero.isAlive();
