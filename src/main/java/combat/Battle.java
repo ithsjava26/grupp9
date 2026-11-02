@@ -2,15 +2,18 @@ package combat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Battle {
     private final Combatant hero;
     private final Combatant enemy;
     private final TurnOrder turnOrder = new TurnOrder();
+    private final Random random;
 
-    public Battle(Combatant hero, Combatant enemy) {
+    public Battle(Combatant hero, Combatant enemy, Random random) {
         this.hero = hero;
         this.enemy = enemy;
+        this.random = random;
     }
 
     // Runs one turn: both sides attack in speed order, a dead combatant does not act
@@ -21,7 +24,7 @@ public class Battle {
             return events;
         }
 
-        Combatant first = turnOrder.whoActsFirst(hero, enemy);
+        Combatant first = heroAttack.hasPriority() ? hero : turnOrder.whoActsFirst(hero, enemy);
         Combatant second = (first == hero) ? enemy : hero;
 
         act(first, second, heroAttack, events);
@@ -36,13 +39,17 @@ public class Battle {
     }
 
     // Records one attack with the damage that actually got through
-    private void act(Combatant attacker, Combatant target, AttackStrategy heroAttack, List<TurnEvent> events) {
+    private void act(Combatant attacker, Combatant target,
+                     AttackStrategy heroAttack, List<TurnEvent> events) {
         AttackStrategy strategy = (attacker == hero) ? heroAttack : new NormalAttack();
         int hpBefore = target.getHp();
+        boolean hit = random.nextInt(100) < strategy.accuracy();
 
-        attacker.attack(target, strategy);
+        if (hit) {
+            attacker.attack(target, strategy);
+        }
 
         events.add(new TurnEvent(attacker.getName(), target.getName(),
-                hpBefore - target.getHp(), target.getHp()));
+                hpBefore - target.getHp(), target.getHp(), hit));
     }
 }

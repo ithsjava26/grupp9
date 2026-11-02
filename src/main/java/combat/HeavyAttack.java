@@ -5,4 +5,9 @@ public class HeavyAttack implements AttackStrategy {
     public int calculateDamage(Combatant attacker) {
         return attacker.getDamage() * 3 / 2;
     }
+
+    @Override
+    public int accuracy() {
+        return 60;
+    }
 }
