@@ -20,4 +20,6 @@ public interface Combatant {
         target.takeDamage(strategy.calculateDamage(this));
     }
 
+    void heal(int amount);
+
 }
