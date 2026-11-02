@@ -105,4 +105,28 @@ class BattleTest {
 
         assertTrue(battle.playTurn(new NormalAttack()).isEmpty());
     }
+
+    // A missed attack deals no damage and is reported as a miss
+    @Test
+    void missedAttackDealsNoDamage() {
+        Hero hero = new Hero("Hero", 20, 8, 0, 5);
+        Enemy enemy = new Enemy("Rat", 20, 2, 0, 2);
+        Battle battle = new Battle(hero, enemy, alwaysMiss());
+
+        List<TurnEvent> events = battle.playTurn(new HeavyAttack());
+
+        assertEquals(new TurnEvent("Hero", "Rat", 0, 20, false), events.get(0));
+    }
+
+    // A priority attack goes first even against a faster enemy
+    @Test
+    void lightAttackGoesFirstEvenIfEnemyIsFaster() {
+        Hero hero = new Hero("Hero", 20, 8, 0, 2);
+        Enemy enemy = new Enemy("Rat", 20, 2, 0, 5);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
+
+        List<TurnEvent> events = battle.playTurn(new LightAttack());
+
+        assertEquals("Hero", events.get(0).attacker());
+    }
 }
