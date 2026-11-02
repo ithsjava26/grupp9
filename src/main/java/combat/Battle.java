@@ -16,6 +16,10 @@ public class Battle {
         this.random = random;
     }
 
+    public Battle(Combatant hero, Combatant enemy) {
+        this(hero, enemy, new Random());
+    }
+
     // Runs one turn: both sides attack in speed order, a dead combatant does not act
     public List<TurnEvent> playTurn(AttackStrategy heroAttack) {
         List<TurnEvent> events = new ArrayList<>();
