@@ -1,6 +1,7 @@
 package game;
 import combat.Hero;
 import combat.Enemy;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Game {
@@ -31,7 +32,13 @@ public class Game {
 
             Enemy enemy = new Enemy("Prison Guard", 50, 10, 3, 5);
             BattleController battleController = new BattleController(scanner);
-            boolean heroWon = battleController.startBattle(hero, enemy);
+            boolean heroWon;
+            try {
+                heroWon = battleController.startBattle(hero, enemy);
+            } catch (NoSuchElementException e) {
+                System.out.println("Input ended. Exiting game.");
+                return;
+            }
 
             if (heroWon) {
                 System.out.println("You won the battle!");
