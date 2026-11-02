@@ -66,19 +66,23 @@ public class BattleController {
         if (hero.isAlive() && inventory != null) {
             Item droppedLoot = lootGenerator.dropAnyItem();
             System.out.println("The enemy dropped: " + droppedLoot.name());
-            System.out.println("Do you want to pick it up?");
-            System.out.println("1. Yes, take it");
-            System.out.println("2.No, leave it");
-            System.out.print("Your choice: ");
+            while (true) {
+                System.out.println("Do you want to pick it up?");
+                System.out.println("1. Yes, take it");
+                System.out.println("2.No, leave it");
+                System.out.print("Your choice: ");
 
-            String lootChoice = scanner.nextLine().trim();
+                String lootChoice = scanner.nextLine().trim();
 
-            if (lootChoice.equals("1")) {
-                inventory.add(droppedLoot);
-            } else if (lootChoice.equals("2")) {
-                System.out.println("You left the loot behind.");
-            } else {
-                System.out.println("Invalid choice. Loot left behind.");
+                if (lootChoice.equals("1")) {
+                    inventory.add(droppedLoot);
+                    break;
+                } else if (lootChoice.equals("2")) {
+                    System.out.println("You left the loot behind.");
+                    break;
+                } else {
+                    System.out.println("Invalid choice. PLease enter 1 or 2.");
+                }
             }
         }
         return hero.isAlive();
