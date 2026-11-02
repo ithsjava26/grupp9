@@ -1,9 +1,13 @@
 package game;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.InputStream;
+import java.util.regex.Pattern;
 
 
 class GameMenuTest {
@@ -83,6 +87,40 @@ class GameMenuTest {
             menu.handleChoice(9);
             assertTrue(output.toString().contains("Invalid choice! Please choose 1, 2 or 3."));
         } finally {
+            System.setOut(originalOut);
+        }
+    }
+
+    @Test
+    void runMenuRepeatsUntilExit() {
+        String input = "2\n3\n";
+
+        InputStream originalIn = System.in;
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        try {
+            System.setIn(new ByteArrayInputStream(
+                    input.getBytes(StandardCharsets.UTF_8)
+            ));
+            System.setOut(new PrintStream(output));
+
+            GameMenu menu = new GameMenu();
+            menu.runMenu();
+
+            String result = output.toString();
+            String menuTitle = "=== FÅNGDJUPET ===";
+
+            assertEquals(
+                    2,
+                    result.split(
+                            Pattern.quote(menuTitle), -1
+                    ).length -1
+            );
+            assertTrue(result.contains("Load game is not available yet."));
+            assertTrue(result.contains("Exiting game. Goodbye!"));
+        } finally {
+            System.setIn(originalIn);
             System.setOut(originalOut);
         }
     }

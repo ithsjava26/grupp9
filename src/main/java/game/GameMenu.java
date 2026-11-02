@@ -45,10 +45,12 @@ public class GameMenu {
 
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
-
-        showMenu();
-        int choice = readChoice(scanner);
-        handleChoice(choice);
+        int choice;
+        do {
+            showMenu();
+            choice = readChoice(scanner);
+            handleChoice(choice);
+        } while (choice != 3);
     }
 
     public static void main(String[] args) {
