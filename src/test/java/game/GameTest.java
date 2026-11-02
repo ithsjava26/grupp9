@@ -3,6 +3,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Scanner;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class GameTest {
 
@@ -60,6 +62,16 @@ public class GameTest {
         assertFalse(game.isGameComplete());
     }
 
+    @Test
+    void gameExitsWhenBattleInputEnds() {
+        Scanner scanner = new Scanner("");
+
+        Game game = new Game(scanner);
+
+        assertDoesNotThrow(() -> game.start());
+        assertEquals(1, game.getCurrentStage());
+        assertFalse(game.isGameComplete());
+    }
 
     }
 

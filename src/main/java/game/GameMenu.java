@@ -16,7 +16,7 @@ public class GameMenu {
             return scanner.nextInt();
         }
         if (!scanner.hasNextLine()) {
-            return -1;
+            return -2;
         }
 
         scanner.nextLine();
@@ -24,12 +24,12 @@ public class GameMenu {
         return -1;
     }
 
-    public void handleChoice(int choice) {
+    public void handleChoice(int choice, Scanner scanner) {
 
         switch (choice) {
             case 1:
                 System.out.println("Starting a new game...");
-                Game game = new Game();
+                Game game = new Game(scanner);
                 game.start();
                 break;
             case 2:
@@ -45,10 +45,16 @@ public class GameMenu {
 
     public void runMenu() {
         Scanner scanner = new Scanner(System.in);
-
-        showMenu();
-        int choice = readChoice(scanner);
-        handleChoice(choice);
+        int choice;
+        do {
+            showMenu();
+            choice = readChoice(scanner);
+            if (choice == -2) {
+                System.out.println("Input ended. Exiting game.");
+                break;
+            }
+            handleChoice(choice, scanner);
+        } while (choice != 3);
     }
 
     public static void main(String[] args) {
