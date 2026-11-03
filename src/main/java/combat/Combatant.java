@@ -7,12 +7,19 @@ public interface Combatant {
 
     int getDamage();
 
-    int getArmor();
+    int getArmour();
 
     int getSpeed();
 
     boolean isAlive();
 
     void takeDamage(int amount);
+
+    // Deals damage to the target using the chosen attack strategy
+    default void attack(Combatant target, AttackStrategy strategy) {
+        target.takeDamage(strategy.calculateDamage(this));
+    }
+
+    void heal(int amount);
 
 }
