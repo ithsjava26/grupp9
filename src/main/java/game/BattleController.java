@@ -1,5 +1,8 @@
 package game;
 
+import items.Weapon;
+import items.Armour;
+import items.Potion;
 import items.Inventory;
 import items.Item;
 import items.LootGenerator;
@@ -18,16 +21,21 @@ import java.util.Scanner;
 public class BattleController {
     private final Scanner scanner;
     private final Inventory inventory;
-    private final LootGenerator lootGenerator =
-            new LootGenerator(new Random());
+    private final LootGenerator lootGenerator;
 
     public BattleController(Scanner scanner) {
         this(scanner, null);
     }
     public BattleController(Scanner scanner, Inventory inventory) {
+        this(scanner, inventory, new LootGenerator(new Random()));
+    }
+    BattleController(Scanner scanner, Inventory inventory, LootGenerator lootGenerator) {
         this.scanner = scanner;
         this.inventory = inventory;
+        this.lootGenerator = lootGenerator;
     }
+
+
     public boolean startBattle(Hero hero, Enemy enemy) {
         Battle battle = new Battle(hero, enemy);
 
@@ -75,7 +83,13 @@ public class BattleController {
                 String lootChoice = scanner.nextLine().trim();
 
                 if (lootChoice.equals("1")) {
-                    inventory.add(droppedLoot);
+                    if (droppedLoot instanceof Weapon weapon) {
+                        inventory.handleWeaponDrop(weapon);
+                    } else if (droppedLoot instanceof Armour armour) {
+                        inventory.handleArmourDrop(armour);
+                    } else if (droppedLoot instanceof Potion potion) {
+                        inventory.addPotion(potion);
+                    }
                     break;
                 } else if (lootChoice.equals("2")) {
                     System.out.println("You left the loot behind.");

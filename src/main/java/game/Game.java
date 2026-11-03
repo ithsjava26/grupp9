@@ -3,6 +3,8 @@ package game;
 import items.Inventory;
 import combat.Hero;
 import combat.Enemy;
+import items.ItemRegistry;
+
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -11,7 +13,11 @@ public class Game {
     private Hero hero;
     private final Scanner scanner;
     private static final int INVENTORY_CAPACITY = 100;
-    private final Inventory inventory = new Inventory(INVENTORY_CAPACITY);
+    private final Inventory inventory = new Inventory(
+            INVENTORY_CAPACITY,
+            ItemRegistry.getStartingWeapon(),
+            ItemRegistry.getStartingArmour()
+    );
 
     private static final int TOTAL_STAGES = 5;
     private int currentStage = 1;
