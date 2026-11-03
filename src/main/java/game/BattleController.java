@@ -29,7 +29,10 @@ public class BattleController {
     public BattleController(Scanner scanner, Inventory inventory) {
         this(scanner, inventory, new LootGenerator(new Random()));
     }
-    BattleController(Scanner scanner, Inventory inventory, LootGenerator lootGenerator) {
+
+
+    BattleController(Scanner scanner, Inventory inventory,
+                     LootGenerator lootGenerator) {
         this.scanner = scanner;
         this.inventory = inventory;
         this.lootGenerator = lootGenerator;
@@ -85,8 +88,10 @@ public class BattleController {
                 if (lootChoice.equals("1")) {
                     if (droppedLoot instanceof Weapon weapon) {
                         inventory.handleWeaponDrop(weapon);
+                        hero.equipWeapon(inventory.getEquippedWeapon().damage());
                     } else if (droppedLoot instanceof Armour armour) {
                         inventory.handleArmourDrop(armour);
+                        hero.equipArmour(inventory.getEquippedArmour().defence());
                     } else if (droppedLoot instanceof Potion potion) {
                         inventory.addPotion(potion);
                     }

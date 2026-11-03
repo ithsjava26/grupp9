@@ -13,11 +13,7 @@ public class Game {
     private Hero hero;
     private final Scanner scanner;
     private static final int INVENTORY_CAPACITY = 100;
-    private final Inventory inventory = new Inventory(
-            INVENTORY_CAPACITY,
-            ItemRegistry.getStartingWeapon(),
-            ItemRegistry.getStartingArmour()
-    );
+    private final Inventory inventory;
 
     private static final int TOTAL_STAGES = 5;
     private int currentStage = 1;
@@ -28,7 +24,17 @@ public class Game {
     }
     public Game(Scanner scanner) {
         this.scanner = scanner;
+
+        inventory = new Inventory(
+                INVENTORY_CAPACITY,
+                ItemRegistry.getStartingWeapon(),
+                ItemRegistry.getStartingArmour(),
+                scanner::nextLine
+        );
+
         hero = new Hero("Player", 100, 15, 5, 10);
+        hero.equipWeapon(inventory.getEquippedWeapon().damage());
+        hero.equipArmour(inventory.getEquippedArmour().defence());
     }
 
     public void start() {
