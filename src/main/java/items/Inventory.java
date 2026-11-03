@@ -79,6 +79,15 @@ public class Inventory {
         return true;
     }
 
+    public boolean usePotion (Potion potion){
+        if (potions.remove(potion)){
+            IO.println("You drank " + potion.name() + "! Restored " + potion.healthRestored() + " HP.");
+            return true;
+        }
+        IO.println("You do not have a potion.");
+        return false;
+    }
+
     public void display() {
         IO.println("\n=== HERO STATUS ===");
         IO.println("Weapon: " + equippedWeapon.name() + " (+" + equippedWeapon.damage() + " DMG)");
