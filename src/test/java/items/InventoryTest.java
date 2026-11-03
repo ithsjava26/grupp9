@@ -74,4 +74,16 @@ class InventoryTest {
         assertFalse(inventory.addPotion(testPotion), "Adding a 4th potion to a capacity-3 pouch should return false.");
         assertEquals(3, inventory.getPotions().size());
     }
+
+    @Test
+    @DisplayName("should remove existing potion from pouch")
+    void shouldRemoveExistingPotion() {
+        Inventory inventory = new Inventory(3, starterWeapon, starterArmour);
+        inventory.addPotion(testPotion);
+        
+        boolean wasRemoved = inventory.usePotion(testPotion);
+        
+        assertTrue(wasRemoved, "Removing an existing potion should return true");
+        assertTrue(inventory.getPotions().isEmpty(), "Potion pouch should be empty after removal");
+    }
 }
