@@ -2,50 +2,131 @@ package items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class Inventory {
-    protected final List<Item> items;
-    private final int weightCapacity;
+    private Weapon equippedWeapon;
+    private Armour equippedArmour;
+    private final List<Potion> potions;
+    private final int maxPotions;
+    private final Supplier<String> inputSupplier;
 
-    public Inventory(int weightCapacity) {
-        this.items = new ArrayList<>();
-        this.weightCapacity = weightCapacity;
+    public Inventory(int maxPotions, Weapon startingWeapon, Armour startingArmour) {
+        this(maxPotions, startingWeapon, startingArmour, IO::readln);
     }
 
-    public boolean add(Item item) {
-        if (currentWeight() + item.weight() > weightCapacity) {
-            IO.println("Cannot carry " + item.name() + ", you are overburdened.");
+    public Inventory(int maxPotions, Weapon startingWeapon, Armour startingArmour, Supplier<String> inputSupplier) {
+        this.potions = new ArrayList<>();
+        this.maxPotions = maxPotions;
+        this.equippedWeapon = startingWeapon;
+        this.equippedArmour = startingArmour;
+        this.inputSupplier = inputSupplier;
+    }
+
+    public Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    public Armour getEquippedArmour() {
+        return equippedArmour;
+    }
+
+    public List<Potion> getPotions() {
+        return List.copyOf(potions);
+    }
+
+    public void handleWeaponDrop(Weapon newWeapon) {
+        IO.println("\n--- LOOT FOUND ---");
+        IO.println("New Weapon: " + newWeapon.name() + " (+" + newWeapon.damage() + " DMG) - " + newWeapon.description());
+        IO.println("Currently Equipped: " + equippedWeapon.name() + " (+" + equippedWeapon.damage() + " DMG)");
+        IO.println("[1] Keep current (" + equippedWeapon.name() + ")");
+        IO.println("[2] Take new and discard current (" + newWeapon.name() + ")");
+        IO.println("Choose an option (1-2): ");
+
+        int choice = readValidChoice(1, 2);
+        if (choice == 2) {
+            IO.println("You discarded " + equippedWeapon.name() + " and equipped " + newWeapon.name() + ".");
+            equippedWeapon = newWeapon;
+        } else {
+            IO.println("You left " + newWeapon.name() + " behind.");
+        }
+    }
+
+    public void handleArmourDrop(Armour newArmour) {
+        IO.println("\n--- LOOT FOUND ---");
+        IO.println("New Armour: " + newArmour.name() + " (+" + newArmour.defence() + " DEF) - " + newArmour.description());
+        IO.println("Currently Equipped: " + equippedArmour.name() + " (+" + equippedArmour.defence() + " DEF)");
+        IO.println("[1] Keep current (" + equippedArmour.name() + ")");
+        IO.println("[2] Take new and discard current (" + newArmour.name() + ")");
+        IO.println("Choose an option (1-2): ");
+
+        int choice = readValidChoice(1, 2);
+        if (choice == 2) {
+            IO.println("You discarded " + equippedArmour.name() + " and equipped " + newArmour.name() + ".");
+            equippedArmour = newArmour;
+        } else {
+            IO.println("You left " + newArmour.name() + " behind.");
+        }
+    }
+
+    public boolean addPotion(Potion potion) {
+        if (potions.size() >= maxPotions) {
+            IO.println("Your potion pouch is full! Cannot carry " + potion.name() + ".");
             return false;
         }
-        items.add(item);
-        IO.println(item.name() + " added to inventory.");
+        potions.add(potion);
+        IO.println("Added to potion pouch: " + potion.name());
         return true;
     }
 
-    public boolean remove(Item item) {
-        return items.remove(item);
-    }
-
-    public int currentWeight() {
-        return items.stream().mapToInt(Item::weight).sum();
-    }
-
-    public short display() {
-        if (items.isEmpty()) {
-            IO.println("Inventory is empty.");
-            return 0;
+    public boolean usePotion (Potion potion){
+        if (potions.remove(potion)){
+            IO.println("You drank " + potion.name() + "! Restored " + potion.healthRestored() + " HP.");
+            return true;
         }
-
-        IO.println("Inventory (" + currentWeight() + "/" + weightCapacity + ")");
-        for (Item item : items) {
-            String stats = switch (item) {
-                case Weapon w -> " DMG: " + w.damage();
-                case Armour a -> " DEF: " + a.defence();
-                case Potion p -> " HEAL: " + p.healthRestored();
-            };
-            IO.println(item.name() + item.description() + stats);
-
-        }
-        return 0;
+        IO.println("You do not have a potion.");
+        return false;
     }
+
+    public void display() {
+        IO.println("\n=== HERO STATUS ===");
+        IO.println("Weapon: " + equippedWeapon.name() + " (+" + equippedWeapon.damage() + " DMG)");
+        IO.println("Armour: " + equippedArmour.name() + " (+" + equippedArmour.defence() + " DEF)");
+        IO.println("Potions (" + potions.size() + "/" + maxPotions + "):");
+
+        if (potions.isEmpty()) {
+            IO.println("  - None");
+        } else {
+            for (int i = 0; i < potions.size(); i++) {
+                Potion p = potions.get(i);
+                IO.println("  [%d] %s (+%d HP)".formatted(i + 1, p.name(), p.healthRestored()));
+            }
+        }
+    }
+
+    private int readValidChoice(int min, int max) {
+        while (true) {
+            String input = inputSupplier.get();
+            if (input == null) {
+                throw new IllegalStateException("Input cannot be null");
+            }
+            input = input.trim();
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice >= min && choice <= max) {
+                    return choice;
+                }
+                IO.println("Invalid input, please enter a number between %d and %d.".formatted(min, max));
+            } catch (NumberFormatException e) {
+                IO.println("Invalid input, please select a valid option.");
+            }
+        }
+    
+    }
+
 }
+
+/**
+ * When initialising the hero:
+ * Inventory heroInventory = new Inventory(3, getStartingWeapon(), getStartingArmour());
+ */
