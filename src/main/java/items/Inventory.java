@@ -32,7 +32,7 @@ public class Inventory {
     }
 
     public List<Potion> getPotions() {
-        return potions;
+        return List.copyOf(potions);
     }
 
     public void handleWeaponDrop(Weapon newWeapon) {
@@ -81,8 +81,8 @@ public class Inventory {
 
     public void display() {
         IO.println("\n=== HERO STATUS ===");
-        IO.println("Weapon: %s (+%d DMG)%n " + equippedWeapon.name() + equippedWeapon.damage());
-        IO.println("Armour: %s (+%d DEF)%n " + equippedArmour.name() + equippedArmour.defence());
+        IO.println("Weapon: " + equippedWeapon.name() + " (+" + equippedWeapon.damage() + " DMG)");
+        IO.println("Armour: " + equippedArmour.name() + " (+" + equippedArmour.defence() + " DEF)");
         IO.println("Potions (" + potions.size() + "/" + maxPotions + "):");
 
         if (potions.isEmpty()) {
