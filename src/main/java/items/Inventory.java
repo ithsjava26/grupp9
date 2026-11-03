@@ -90,7 +90,7 @@ public class Inventory {
         } else {
             for (int i = 0; i < potions.size(); i++) {
                 Potion p = potions.get(i);
-                System.out.printf("  [%d] %s (+%d HP)%n", i + 1, p.name(), p.healthRestored());
+                IO.println("  [%d] %s (+%d HP)".formatted(i + 1, p.name(), p.healthRestored()));
             }
         }
     }
