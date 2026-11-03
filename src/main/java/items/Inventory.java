@@ -112,7 +112,7 @@ public class Inventory {
                 IO.println("Invalid input, please select a valid option.");
             }
         }
-        return 0;
+    
     }
 
 }
