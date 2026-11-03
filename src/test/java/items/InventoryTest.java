@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryTest {
@@ -14,6 +12,7 @@ class InventoryTest {
     private Armour starterArmour;
     private Weapon upgradeWeapon;
     private Armour upgradeArmour;
+    private Potion testPotion;
 
     @BeforeEach
     void setUp() {
@@ -21,12 +20,9 @@ class InventoryTest {
         starterArmour = new Armour("Starter Clothes", "Basic cloth", 1, 1);
         upgradeWeapon = new Weapon("Steel Sword", "Sharp steel", 3, 10);
         upgradeArmour = new Armour("Iron Plate", "Heavy iron", 8, 8);
+        testPotion = new Potion("Health Potion", "Heals 20 HP", 1, 20);
     }
 
-
-    private void provideInput(String data) {
-        System.setIn(new ByteArrayInputStream(data.getBytes()));
-    }
 
     @Test
     @DisplayName("should initialize with starting weapon and armour")
@@ -40,23 +36,19 @@ class InventoryTest {
     @Test
     @DisplayName("should swap equipped weapon when option two selected")
     void shouldSwapEquippedWeaponWhenOptionTwoSelected() {
-        Inventory inventory = new Inventory(3, starterWeapon, starterArmour);
-        provideInput("2\n");
-        Weapon newWeapon = ItemRegistry.getWeapons().get(1);
+        Inventory inventory = new Inventory(3, starterWeapon, starterArmour, () -> "2");
 
-        inventory.handleWeaponDrop(newWeapon);
+        inventory.handleWeaponDrop(upgradeWeapon);
 
-        assertEquals(newWeapon, inventory.getEquippedWeapon());
+        assertEquals(upgradeWeapon, inventory.getEquippedWeapon());
     }
 
     @Test
     @DisplayName("should keep current weapon when option one selected")
     void shouldKeepCurrentWeaponWhenOptionOneSelected() {
-        Inventory inventory = new Inventory(3, starterWeapon, starterArmour);
-        provideInput("1\n");
-        Weapon newWeapon = ItemRegistry.getWeapons().get(1);
+        Inventory inventory = new Inventory(3, starterWeapon, starterArmour, () -> "1");
 
-        inventory.handleWeaponDrop(newWeapon);
+        inventory.handleWeaponDrop(upgradeWeapon);
 
         assertEquals(starterWeapon, inventory.getEquippedWeapon());
     }
@@ -64,9 +56,7 @@ class InventoryTest {
     @Test
     @DisplayName("should swap equipped armour when option two selected")
     void shouldSwapEquippedArmourWhenOptionTwoSelected() {
-        Inventory inventory = new Inventory(3, starterWeapon, starterArmour);
-        provideInput("2\n");
-        Armour newArmour = ItemRegistry.getArmours().get(1);
+        Inventory inventory = new Inventory(3, starterWeapon, starterArmour, () -> "2");
 
         inventory.handleArmourDrop(upgradeArmour);
 
@@ -77,12 +67,11 @@ class InventoryTest {
     @DisplayName("should enforce potion capacity limit")
     void shouldEnforcePotionCapacityLimit() {
         Inventory inventory = new Inventory(3, starterWeapon, starterArmour);
-        Potion potion = ItemRegistry.getPotions().getFirst();
 
-        assertTrue(inventory.addPotion(potion));
-        assertTrue(inventory.addPotion(potion));
-        assertTrue(inventory.addPotion(potion));
-        assertFalse(inventory.addPotion(potion), "Adding a 4th potion to a capacity-3 pouch should return false.");
+        assertTrue(inventory.addPotion(testPotion));
+        assertTrue(inventory.addPotion(testPotion));
+        assertTrue(inventory.addPotion(testPotion));
+        assertFalse(inventory.addPotion(testPotion), "Adding a 4th potion to a capacity-3 pouch should return false.");
         assertEquals(3, inventory.getPotions().size());
     }
 }
