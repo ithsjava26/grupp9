@@ -22,6 +22,7 @@ public class BattleController {
     private final Scanner scanner;
     private final Inventory inventory;
     private final LootGenerator lootGenerator;
+    private final Random battleRandom;
 
     public BattleController(Scanner scanner) {
         this(scanner, null);
@@ -36,11 +37,19 @@ public class BattleController {
         this.scanner = scanner;
         this.inventory = inventory;
         this.lootGenerator = lootGenerator;
+        this.battleRandom = new Random();
+    }
+    BattleController(Scanner scanner, Inventory inventory, LootGenerator lootGenerator,
+                     Random battleRandom) {
+        this.scanner = scanner;
+        this.inventory = inventory;
+        this.lootGenerator = lootGenerator;
+        this.battleRandom = battleRandom;
     }
 
 
     public boolean startBattle(Hero hero, Enemy enemy) {
-        Battle battle = new Battle(hero, enemy);
+        Battle battle = new Battle(hero, enemy, battleRandom);
 
         while (!battle.isOver()) {
             System.out.println("\nChoose your attack:");
@@ -69,38 +78,45 @@ public class BattleController {
 
             List<TurnEvent> events = battle.playTurn(attack);
             for (TurnEvent event : events) {
-               System.out.println(event.attacker() + " attacks " + event.target()
-               + " for " + event.damage() + " damage!");
+               if (event.hit()) {
+                   System.out.println(event.attacker() + " attacks " + event.target()
+                   + " for " + event.damage() + " damage!");
+               } else {
+                   System.out.println(event.attacker() + " attacks "
+                   + event.target() + " but misses!");
+               }
                System.out.println(event.target() + " has " + event.targetHpLeft() + " HP left.");
             }
         }
         if (hero.isAlive() && inventory != null) {
             Item droppedLoot = lootGenerator.dropAnyItem();
             System.out.println("The enemy dropped: " + droppedLoot.name());
-            while (true) {
-                System.out.println("Do you want to pick it up?");
-                System.out.println("1. Yes, take it");
-                System.out.println("2.No, leave it");
-                System.out.print("Your choice: ");
 
-                String lootChoice = scanner.nextLine().trim();
+            if (droppedLoot instanceof Weapon weapon) {
+                inventory.handleWeaponDrop(weapon);
+                hero.equipWeapon(inventory.getEquippedWeapon().damage());
+            } else if (droppedLoot instanceof Armour armour) {
+                inventory.handleArmourDrop(armour);
+                hero.equipArmour(inventory.getEquippedArmour().defence());
+            } else if (droppedLoot instanceof Potion potion) {
 
-                if (lootChoice.equals("1")) {
-                    if (droppedLoot instanceof Weapon weapon) {
-                        inventory.handleWeaponDrop(weapon);
-                        hero.equipWeapon(inventory.getEquippedWeapon().damage());
-                    } else if (droppedLoot instanceof Armour armour) {
-                        inventory.handleArmourDrop(armour);
-                        hero.equipArmour(inventory.getEquippedArmour().defence());
-                    } else if (droppedLoot instanceof Potion potion) {
+                while (true) {
+                    System.out.println("Do you want to pick it up?");
+                    System.out.println("1. Yes, take it");
+                    System.out.println("2.No, leave it");
+                    System.out.print("Your choice: ");
+
+                    String lootChoice = scanner.nextLine().trim();
+
+                    if (lootChoice.equals("1")) {
                         inventory.addPotion(potion);
+                        break;
+                    } else if (lootChoice.equals("2")) {
+                        System.out.println("You left the loot behind.");
+                        break;
+                    } else {
+                        System.out.println("Invalid choice. PLease enter 1 or 2.");
                     }
-                    break;
-                } else if (lootChoice.equals("2")) {
-                    System.out.println("You left the loot behind.");
-                    break;
-                } else {
-                    System.out.println("Invalid choice. PLease enter 1 or 2.");
                 }
             }
         }

@@ -14,7 +14,10 @@ public class GameMenu {
     public int readChoice(Scanner scanner) {
         if (scanner.hasNextInt()) {
             int choice = scanner.nextInt();
-            scanner.nextLine();
+
+            if (scanner.hasNextLine()) {
+                scanner.nextLine();
+            }
             return choice;
         }
         if (!scanner.hasNextLine()) {

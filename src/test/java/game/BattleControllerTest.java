@@ -221,4 +221,48 @@ public class BattleControllerTest {
         assertNotEquals(startingArmour, hero.getArmour());
     }
 
+
+    @Test
+    void missedAttackPrintsMissMessage() {
+        Random firstMissThenHit = new Random() {
+            private int calls = 0;
+
+            @Override
+            public int nextInt(int bound) {
+                return calls++ == 0 ? 99 : 0;
+            }
+        };
+
+        Hero hero = new Hero("Player", 100, 10, 5, 10);
+        Enemy enemy = new Enemy("Guard", 1, 1, 0, 1);
+
+        Scanner scanner = new Scanner("3\n1\n");
+
+        LootGenerator lootGenerator = new LootGenerator(new Random());
+
+        BattleController controller = new BattleController(
+                scanner, null, lootGenerator, firstMissThenHit
+        );
+
+        java.io.PrintStream originalOut = System.out;
+        java.io.ByteArrayOutputStream output =
+                new java.io.ByteArrayOutputStream();
+
+        try {
+            System.setOut(new java.io.PrintStream(output));
+
+            boolean heroWon = controller.startBattle(hero, enemy);
+
+            assertTrue(heroWon);
+            assertTrue(
+                    output.toString().contains("Player attacks Guard but misses!"),
+                    "Expected a missed attack message"
+            );
+        } finally {
+            System.setOut(originalOut);
+            scanner.close();
+        }
+    }
+
+
 }
