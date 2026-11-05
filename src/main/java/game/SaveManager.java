@@ -6,7 +6,15 @@ import java.io.IOException;
 
 public class SaveManager {
 
-    private final Path saveFile = Path.of("savegame.txt");
+    private final Path saveFile;
+
+    public SaveManager() {
+        this.saveFile = Path.of("savegame.txt");
+    }
+
+    public SaveManager(Path saveFile) {
+        this.saveFile = saveFile;
+    }
 
     public void save(GameSave gameSave) {
 
