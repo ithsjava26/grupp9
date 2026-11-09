@@ -11,12 +11,7 @@ public class LootGenerator {
     }
 
     public Item dropAnyItem() {
-        List<Item> pool = ItemRegistry.ALL_ITEMS;
-        return pool.get(random.nextInt(pool.size()));
-    }
-
-    public Potion dropPotionOnly() {
-        List<Potion> pool = ItemRegistry.mutablePotions;
+        List<Item> pool = ItemRegistry.getAllItems();
         return pool.get(random.nextInt(pool.size()));
     }
 }

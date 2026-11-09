@@ -5,4 +5,9 @@ public class NormalAttack implements AttackStrategy {
     public int calculateDamage(Combatant attacker) {
         return attacker.getDamage();
     }
+
+    @Override
+    public int accuracy() {
+        return 90;
+    }
 }

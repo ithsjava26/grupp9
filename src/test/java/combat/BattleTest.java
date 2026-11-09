@@ -3,24 +3,45 @@ package combat;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BattleTest {
 
+    // Fake Random that always rolls 0, so every attack hits
+    private static Random alwaysHit() {
+        return new Random() {
+            @Override
+            public int nextInt(int bound) {
+                return 0;
+            }
+        };
+    }
+
+    // Fake Random that always rolls 99, every attack misses except a 100% accuracy one (lightAttack)
+    private static Random alwaysMiss() {
+        return new Random() {
+            @Override
+            public int nextInt(int bound) {
+                return 99;
+            }
+        };
+    }
+
     // Faster hero attacks first, then the enemy hits back
     @Test
     void bothSidesAttackInSpeedOrder() {
         Hero hero = new Hero("Hero", 20, 8, 0, 5);
         Enemy enemy = new Enemy("Rat", 20, 2, 0, 2);
-        Battle battle = new Battle(hero, enemy);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
 
         List<TurnEvent> events = battle.playTurn(new NormalAttack());
 
         assertEquals(2, events.size());
-        assertEquals(new TurnEvent("Hero", "Rat", 8, 12), events.get(0));
-        assertEquals(new TurnEvent("Rat", "Hero", 2, 18), events.get(1));
+        assertEquals(new TurnEvent("Hero", "Rat", 8, 12, true), events.get(0));
+        assertEquals(new TurnEvent("Rat", "Hero", 2, 18, true), events.get(1));
     }
 
     // Faster enemy attacks first, so the events come in that order
@@ -28,7 +49,7 @@ class BattleTest {
     void fasterEnemyAttacksFirst() {
         Hero hero = new Hero("Hero", 20, 8, 0, 2);
         Enemy enemy = new Enemy("Rat", 20, 2, 0, 5);
-        Battle battle = new Battle(hero, enemy);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
 
         List<TurnEvent> events = battle.playTurn(new NormalAttack());
 
@@ -41,7 +62,7 @@ class BattleTest {
     void deadEnemyDoesNotAttackBack() {
         Hero hero = new Hero("Hero", 20, 8, 0, 5);
         Enemy enemy = new Enemy("Rat", 5, 2, 0, 2);
-        Battle battle = new Battle(hero, enemy);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
 
         List<TurnEvent> events = battle.playTurn(new NormalAttack());
 
@@ -54,7 +75,7 @@ class BattleTest {
     void deadHeroDoesNotAttackBack() {
         Hero hero = new Hero("Hero", 2, 8, 0, 2);
         Enemy enemy = new Enemy("Rat", 20, 5, 0, 5);
-        Battle battle = new Battle(hero, enemy);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
 
         List<TurnEvent> events = battle.playTurn(new NormalAttack());
 
@@ -67,7 +88,7 @@ class BattleTest {
     void eventReportsDamageAfterArmour() {
         Hero hero = new Hero("Hero", 20, 8, 0, 5);
         Enemy enemy = new Enemy("Knight", 20, 2, 3, 2);
-        Battle battle = new Battle(hero, enemy);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
 
         List<TurnEvent> events = battle.playTurn(new NormalAttack());
 
@@ -79,9 +100,33 @@ class BattleTest {
     void noEventsAfterBattleIsOver() {
         Hero hero = new Hero("Hero", 20, 8, 0, 5);
         Enemy enemy = new Enemy("Rat", 5, 2, 0, 2);
-        Battle battle = new Battle(hero, enemy);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
         battle.playTurn(new NormalAttack());
 
         assertTrue(battle.playTurn(new NormalAttack()).isEmpty());
+    }
+
+    // A missed attack deals no damage and is reported as a miss
+    @Test
+    void missedAttackDealsNoDamage() {
+        Hero hero = new Hero("Hero", 20, 8, 0, 5);
+        Enemy enemy = new Enemy("Rat", 20, 2, 0, 2);
+        Battle battle = new Battle(hero, enemy, alwaysMiss());
+
+        List<TurnEvent> events = battle.playTurn(new HeavyAttack());
+
+        assertEquals(new TurnEvent("Hero", "Rat", 0, 20, false), events.get(0));
+    }
+
+    // A priority attack goes first even against a faster enemy
+    @Test
+    void lightAttackGoesFirstEvenIfEnemyIsFaster() {
+        Hero hero = new Hero("Hero", 20, 8, 0, 2);
+        Enemy enemy = new Enemy("Rat", 20, 2, 0, 5);
+        Battle battle = new Battle(hero, enemy, alwaysHit());
+
+        List<TurnEvent> events = battle.playTurn(new LightAttack());
+
+        assertEquals("Hero", events.get(0).attacker());
     }
 }
