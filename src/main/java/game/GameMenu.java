@@ -3,6 +3,16 @@ import java.util.Scanner;
 
 public class GameMenu {
 
+    private final SaveManager saveManager;
+
+    public GameMenu() {
+        this.saveManager = new SaveManager();
+    }
+
+    public GameMenu(SaveManager saveManager) {
+        this.saveManager = saveManager;
+    }
+
     public void showMenu() {
         System.out.println("=== FÅNGDJUPET ===");
         System.out.println("1. Start New Game");
@@ -12,9 +22,21 @@ public class GameMenu {
     }
 
     public int readChoice(Scanner scanner) {
+
+//        if (scanner.hasNextInt()) {
+//            return scanner.nextInt();
+//        }
+
         if (scanner.hasNextInt()) {
-            return scanner.nextInt();
+            int choice = scanner.nextInt();
+
+            // Consume the newline if one exists.
+            if (scanner.hasNextLine()) {
+                scanner.nextLine();
+            }
+            return choice;
         }
+
         if (!scanner.hasNextLine()) {
             return -2;
         }
@@ -33,7 +55,12 @@ public class GameMenu {
                 game.start();
                 break;
             case 2:
-                System.out.println("Load game is not available yet.");
+                Game loadedGame = new Game(scanner, saveManager);
+
+                if (loadedGame.loadGame()) {
+                    loadedGame.start();
+                }
+
                 break;
             case 3:
                 System.out.println("Exiting game. Goodbye!");
