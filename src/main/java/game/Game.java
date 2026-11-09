@@ -25,7 +25,7 @@ public class Game {
         this(new Scanner(System.in));
     }
     public Game(Scanner scanner) {
-        this(scanner, new saveManager());
+        this(scanner, new SaveManager());
         
     }
 
