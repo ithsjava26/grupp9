@@ -120,6 +120,8 @@ public class Game {
 
         hero = new Hero(loadedGame.heroName(), 100, 15, 5, 10);
         hero.restoreHp(loadedGame.heroHp());
+        hero.equipWeapon(inventory.getEquippedWeapon().damage());
+        hero.equipArmour(inventory.getEquippedArmour().defence());
 
 
         return true;
