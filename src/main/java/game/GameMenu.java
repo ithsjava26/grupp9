@@ -51,7 +51,7 @@ public class GameMenu {
         switch (choice) {
             case 1:
                 System.out.println("Starting a new game...");
-                Game game = new Game(scanner, SaveManager);
+                Game game = new Game(scanner, saveManager);
                 game.start();
                 break;
             case 2:
