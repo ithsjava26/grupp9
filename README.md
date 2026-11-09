@@ -24,6 +24,16 @@
 -as mentioned previously our game implements a rogue-like inventory management system, so handleWeaponDrop & handleArmourDrop prompt the player to either keep their currently equipped gear or drop it and equip the newly generated gear after each combat encounter
 
 ## Module C: Engine
+The Game class manages the main game flow, including initializing the player, handling stage progression and determining when the game ends. The game progresses through multiple stages, with the player facing enemies in turn based combat. 
+
+After each successful battle the game continues to the loot handling process, allowing the player to collect or equip items before progressing to the next stage. The game also provides feedback when the player advances to another stage, wins or loses.
+
+The GameMenu class handles the concole based used interface. It displays options to start a new game, load a saved game or exit. A loop keeps the menu running until the player chooses to exit, while the readChoice() method handles numeric input, invalid input and end of input situations.
+
+The menu and game engine are connected through the Game class. The SaveManager is passed to the game when starting or loading, allowing the save/load functioality to be integrated with the existing game flow. 
+
+JUnit tests were implemted to verify menu choices, input validation menu looping and game behaviour. These tests help ensure that changes to the menu or game flow do not break existing functionality.
+
 
 ## Design patterns
 
