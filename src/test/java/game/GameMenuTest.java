@@ -99,7 +99,7 @@ class GameMenuTest {
     }
 
     @Test
-    void runMenuRepeatsUntilExit() {
+    void runMenuRepeatsUntilExit(@TempDir Path tempDir) {
         String input = "2\n3\n";
 
         InputStream originalIn = System.in;
@@ -112,7 +112,9 @@ class GameMenuTest {
             ));
             System.setOut(new PrintStream(output));
 
-            GameMenu menu = new GameMenu();
+            SaveManager testSaveManager =
+                new SaveManager(tempDir.resolve("savegame.txt"));
+            GameMenu menu = new GameMenu(testSaveManager);
             menu.runMenu();
 
             String result = output.toString();
