@@ -12,6 +12,31 @@
 
 ## Module A: Combat
 
+The combat package handles fighting between the hero and enemies.
+
+- Combatants - Hero and Enemy: have HP, damage, armour and speed. The hero can equip a weapon and armour for bonus
+  stats.
+- Battle: plays one round. It decides who goes first, checks if each attack hits or misses, deals the damage and returns
+  a list of what happened.
+  It does not print anything, so the menu decides how to show it.
+- TurnEvent: one entry in that list: who attacked, who was hit, how much damage, HP left and if it hit.
+
+### Design pattern: Strategy
+
+Each attack (Light, Normal, Heavy) is its own class that follows the AttackStrategy interface.
+
+- Light Attack always hits, always goes first but deals less damage.
+- Normal Attack almost always hits, is dependent on speed to hit first and does normal damage.
+- Heavy Attack hits 60% of the time, is dependent on speed and does more damage.
+
+Battle works with the AttackStrategy interface, so we can add new attacks for the hero without changing Battle.
+
+### Testing
+
+Battle takes a Random as input.
+In tests, I give a fake Random that always hits or always misses, so the results are predictable.
+The other classes in the package have their own tests too.
+
 ## Module B: Items
 -for the item and inventory management section of our game I decided to take inspiration from rogue-like inventory management systems. The player character is only allowed to have 1 weapon and 1 armour, but can have multiple potions at a time. This allows for higher replayability through diversifying what loot is used from run to run
 
@@ -37,4 +62,5 @@ JUnit tests were implemted to verify menu choices, input validation menu looping
 
 ## Design patterns
 
+- Strategy: the attacks in the combat package (see Module A)
 ## Git reflection
