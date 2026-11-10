@@ -12,6 +12,8 @@ public class Game {
 
     private Hero hero;
     private final Scanner scanner;
+    private final SaveManager saveManager;
+
     private static final int INVENTORY_CAPACITY = 100;
     private final Inventory inventory;
 
@@ -23,7 +25,13 @@ public class Game {
         this(new Scanner(System.in));
     }
     public Game(Scanner scanner) {
+        this(scanner, new SaveManager());
+        
+    }
+
+    public Game(Scanner scanner, SaveManager saveManager) {
         this.scanner = scanner;
+        this.saveManager = saveManager;
 
         inventory = new Inventory(
                 INVENTORY_CAPACITY,
@@ -59,6 +67,7 @@ public class Game {
             if (heroWon) {
                 System.out.println("You won the battle!");
                 nextStage();
+                saveGame();
             } else {
                 System.out.println("Game Over! Your hero was defeated.");
             }
@@ -88,5 +97,34 @@ public class Game {
 
     public boolean isGameComplete() {
         return gameCompleted;
+    }
+
+    public void saveGame() {
+
+        GameSave gameSave = new GameSave(hero.getName(), hero.getHp(), currentStage, gameCompleted);
+        saveManager.save(gameSave);
+
+
+    }
+
+    public boolean loadGame() {
+
+        GameSave loadedGame = saveManager.load();
+
+        if (loadedGame == null) {
+            return false;
+        }
+
+        currentStage = loadedGame.currentStage();
+        gameCompleted = loadedGame.gameCompleted();
+
+        hero = new Hero(loadedGame.heroName(), 100, 15, 5, 10);
+        hero.restoreHp(loadedGame.heroHp());
+        hero.equipWeapon(inventory.getEquippedWeapon().damage());
+        hero.equipArmour(inventory.getEquippedArmour().defence());
+
+
+        return true;
+
     }
 }

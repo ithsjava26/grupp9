@@ -27,6 +27,11 @@ public abstract class AbstractCombatant implements Combatant {
         return hp;
     }
 
+    // Restores saved HP without changing the hero's maximum HP.
+    public void restoreHp(int savedHp) {
+        this.hp = Math.clamp(savedHp, 0, maxHp);
+    }
+
     @Override
     public int getDamage() {
         return damage;

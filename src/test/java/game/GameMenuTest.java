@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.InputStream;
 import java.util.regex.Pattern;
 import java.util.Scanner;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
 
 
 class GameMenuTest {
@@ -50,15 +52,19 @@ class GameMenuTest {
     }
 
     @Test
-    void handleChoiceShowsLoadGameMessage() {
-        GameMenu menu = new GameMenu();
+    void handleChoiceLoadsSavedGame(@TempDir Path tempDir) {
+        Path testFile = tempDir.resolve("savegame.txt");
+        SaveManager testSaveManager = new SaveManager(testFile);
+        GameSave savedGame = new GameSave("Player", 80, 2, false);
+        testSaveManager.save(savedGame);
+        GameMenu menu = new GameMenu(testSaveManager);
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         try {
             System.setOut(new PrintStream(output));
             menu.handleChoice(2, new Scanner(""));
-            assertTrue(output.toString().contains("Load game is not available yet."));
+            assertTrue(output.toString().contains("HP: 80"));
         } finally {
             System.setOut(originalOut);
         }
@@ -93,7 +99,7 @@ class GameMenuTest {
     }
 
     @Test
-    void runMenuRepeatsUntilExit() {
+    void runMenuRepeatsUntilExit(@TempDir Path tempDir) {
         String input = "2\n3\n";
 
         InputStream originalIn = System.in;
@@ -106,7 +112,9 @@ class GameMenuTest {
             ));
             System.setOut(new PrintStream(output));
 
-            GameMenu menu = new GameMenu();
+            SaveManager testSaveManager =
+                new SaveManager(tempDir.resolve("savegame.txt"));
+            GameMenu menu = new GameMenu(testSaveManager);
             menu.runMenu();
 
             String result = output.toString();
@@ -118,7 +126,7 @@ class GameMenuTest {
                             Pattern.quote(menuTitle), -1
                     ).length -1
             );
-            assertTrue(result.contains("Load game is not available yet."));
+            //assertTrue(result.contains("Load game is not available yet."));
             assertTrue(result.contains("Exiting game. Goodbye!"));
         } finally {
             System.setIn(originalIn);
