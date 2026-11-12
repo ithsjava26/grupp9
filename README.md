@@ -2,7 +2,24 @@
 
 ## Description
 
+Fångdjupet is a text-based RPG played in the console.
+You control a hero who fights through 5 stages in turn-based combat.
+Each turn you choose an attack: Light (never misses, goes first), Normal, or Heavy (strong but can miss).
+After a won battle you can pick up loot such as weapons, armour and potions.
+If the hero dies, the game is over. The game can be saved and loaded.
+
 ## How to run
+
+The game is played in the terminal using the keyboard. Type a number and press Enter to choose an option.
+
+1. Start the game by running the main method in game.GameMenu
+2. Main menu: 1 = Start New Game, 2 = Load Game, 3 = Exit.
+3. In a battle you choose an attack each turn: 1 = Light Attack (never misses, always goes first), 2 = Normal Attack,
+   3 = Heavy Attack (strong, but can miss).
+4. After you win a battle, an item drops. For a weapon or armour you choose to keep your current gear (1) or swap to the
+   new one (2). For a potion you choose to take it (1) or leave it (2).
+5. Win battles to move on to the next stage. Win the battle on stage 5 to clear the game! If your hero dies at any
+   point, the game is over and you have to start over.
 
 ## Module owners
 
@@ -80,4 +97,13 @@ The system has also been tested by playing the game, saving progress and then re
 ## Design patterns
 
 - Strategy: the attacks in the combat package (see Module A)
+
 ## Git reflection
+
+Working with Git went smoothly for us.
+Each of us worked in our own module on separate branches and merged through pull requests with reviews from the others,
+so we rarely got in each other's way.
+
+We ran into one minor conflict, where two PRs changed the same code.
+We talked it through, merged them in the right order and adapted the code, and it was solved quickly.
+Good communication solved most problems for us.
