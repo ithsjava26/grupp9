@@ -59,6 +59,23 @@ The menu and game engine are connected through the Game class. The SaveManager i
 
 JUnit tests were implemted to verify menu choices, input validation menu looping and game behaviour. These tests help ensure that changes to the menu or game flow do not break existing functionality.
 
+### Save and Load
+
+The save and load system allows the player to save their progress and continue playing later without starting from the beginning.
+
+The system uses two main classes:
+
+- **GameSave:** A record that stores the players name, HP, current stage and if the game is completed.
+- **SaveManager:** Handles saving the game data to a text file called `savegame.txt` and loading the data when needed.
+
+The save and load system is connected to the `Game` and `GameMenu` classes.
+
+After winning a battle the game automatically saves the players progress. When choosing **Load Game** in the main menu, the game loads the saved data and the player can continue from the same stage with the HP they had before.
+
+JUnit tests are used to check that saving and loading works correctly. There is also a test for when the save file doesn't exist.
+
+The system has also been tested by playing the game, saving progress and then restarting the game to load it again.
+
 
 ## Design patterns
 
